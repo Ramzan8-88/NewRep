@@ -28,29 +28,25 @@ class Queue {
         delete[] _data;
     }
 
-    //  метод для добавления элемента в очередь
     void enqueue(const T& value) {
         if (_count == _size) {
             throw std::overflow_error("Queue overflow");
         }
         _rear = (_rear + 1) % _size;
-        // перемещаем индекс последнего элемента
         _data[_rear] = value;
         ++_count;
     }
 
-    //  метод для удаления элемента из очереди
     T dequeue() {
         if (_count == 0) {
             throw std::underflow_error("Queue underflow");
         }
         T value = _data[_front];
-        _front = (_front + 1) % _size;   //  передвигаем индекс первого элемента
+        _front = (_front + 1) % _size;
         --_count;
         return value;
     }
 
-    //  метод для получения первого элемента без удаления
     T front() const {
         if (_count == 0) {
             throw std::underflow_error("Queue is empty");
@@ -58,12 +54,10 @@ class Queue {
         return _data[_front];
     }
 
-    //  метод для проверки, пуста ли очередь
     bool isEmpty() const {
         return _count == 0;
     }
 
-    //  метод для получения текущего размера очереди
     size_t size() const {
         return _count;
     }

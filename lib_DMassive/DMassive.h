@@ -24,7 +24,7 @@ namespace algorithms {
     inline T max(const T& val_1, const T& val_2) {
         return (val_1 > val_2) ? val_1 : val_2;
     }
-}  // namespace algorithms
+}
 
 template <typename T>
 class DMassive {
@@ -81,11 +81,9 @@ class DMassive {
     size_t find_last(T value) const noexcept;
 
  private:
-    void check_index(size_t pos) const;  // вспомогательная функция
-                                         // для проверки индекса
+    void check_index(size_t pos) const;
 };
 
-// реализация функций
 
 template <typename T>
 DMassive<T>::DMassive() {
@@ -105,7 +103,6 @@ DMassive<T>::~DMassive() {
     delete[] _states;
 }
 
-// функция для проверки корректности индекса
 template <typename T>
 void DMassive<T>::check_index(size_t pos) const {
     if (pos >= _size) {
@@ -267,11 +264,9 @@ template <typename T>
 DMassive<T>& DMassive<T>::remove_by_index(size_t pos) {
     check_index(pos);
 
-    // Помечаем элемент как удалённый
     _states[pos] = State::deleted;
     _deleted++;
 
-    // Сдвигаем элементы, если удалённый элемент не последний
     if (pos != _size - 1) {
         for (size_t i = pos; i < _size - 1; ++i) {
             _data[i] = _data[i + 1];
@@ -279,7 +274,6 @@ DMassive<T>& DMassive<T>::remove_by_index(size_t pos) {
         }
     }
 
-    // Уменьшаем размер массива
     _size--;
 
     return *this;
