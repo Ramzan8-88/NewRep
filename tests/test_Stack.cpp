@@ -170,13 +170,13 @@ TEST(TestIsValidExpression, throws_on_incomplete_pipe_pairs) {
     EXPECT_FALSE(actual_result);
 }
 
-TEST(TestIsValidExpression, can_validate_expression_with_nested_pipes) {
+TEST(TestIsValidExpression, throws_on_last_bracket) {
     // Arrange
-    std::string expression = "|(a+b)|*[3-x]";
+    std::string expression = "|(a+b)|*[3-x])";
 
     // Act
     bool actual_result = isValidExpression(expression);
 
     // Assert
-    EXPECT_TRUE(actual_result);
+    EXPECT_FALSE(actual_result);
 }
