@@ -3,23 +3,25 @@
 #ifndef LIB_VECTOR_VECTOR_H_
 #define LIB_VECTOR_VECTOR_H_
 
-#include "../lib_DMassive/DMassive.h"
 #include <stdexcept>
+#include <iostream>
 #include <initializer_list>
+#include "../lib_DMassive/DMassive.h"
 
 template<typename T>
 class Vector {
-private:
+ private:
     DMassive<T> _data;
     size_t _start_index;
 
     void check_size_compatibility(const Vector& other) const {
         if (_data.size() != other._data.size()) {
-            throw std::invalid_argument("Vector sizes must match for this operation");
+            throw std::invalid_argument(
+                "Vector sizes must match for this operation");
         }
     }
 
-public:
+ public:
     explicit Vector(size_t size = 0, T value = T{})
         : _data(size, value), _start_index(0) {}
 
@@ -32,7 +34,6 @@ public:
     Vector(const Vector& other)
         : _data(other._data), _start_index(other._start_index) {}
 
-    // Оператор присваивания
     Vector& operator=(const Vector& other) {
         if (this != &other) {
             _data = other._data;
