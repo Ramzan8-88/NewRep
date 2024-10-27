@@ -1,0 +1,6 @@
+// Copyright 2024 Ramzan Kamaletdinov
+
+#ifndef LIB_ALGORITHMS_ALGORITHMS_H_
+#define LIB_ALGORITHMS_ALGORITHMS_H_
+
+#endif  // LIB_ALGORITHMS_ALGORITHMS_H_
