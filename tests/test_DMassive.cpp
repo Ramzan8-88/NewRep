@@ -1,6 +1,7 @@
 // Copyright 2024 Ramzan Kamaletdinov
 
 #include <gtest.h>
+#include <algorithm>
 #include "../lib_DMassive/DMassive.h"
 
 #define EPSILON 0.000001

@@ -16,7 +16,6 @@ class TPair {
     T2 _second;
 
  public:
-
     TPair();
     TPair(const T1& first, const T2& second);
     TPair(T1&& first, T2&& second) noexcept;
@@ -160,4 +159,4 @@ std::ostream& operator<<(
     return os;
 }
 
-#endif  // LIB_PAIR_PAIR_H
+#endif  // LIB_PAIR_PAIR_H_

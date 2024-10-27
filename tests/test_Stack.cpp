@@ -1,6 +1,7 @@
 // Copyright 2024 Ramzan Kamaletdinov
 
 #include <gtest.h>
+#include <string>
 #include "../lib_Stack/Stack.h"
 
 #define EPSILON 0.000001
