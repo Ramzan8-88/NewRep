@@ -26,7 +26,7 @@ inline T max(const T& val_1, const T& val_2) {
     return (val_1 > val_2) ? val_1 : val_2;
 }
 
-}  // namespace algorithms 
+}  // namespace algorithms
 
 template <typename T>
 class DMassive {

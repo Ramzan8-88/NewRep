@@ -11,7 +11,7 @@ class TNode {
     T _value;
     TNode<T>* _pnext;
 
-public:
+ public:
     explicit TNode(T value) : _value(value), _pnext(nullptr) {}
     TNode(const TNode& other) = default;
     ~TNode() = default;
@@ -39,7 +39,7 @@ class TList {
     TNode<T>* _tail;
     int _size;
 
-public:
+ public:
     TList() : _head(nullptr), _tail(nullptr), _size(0) {}
     ~TList();
 
@@ -96,8 +96,7 @@ void TList<T>::insertBack(T value) {
     TNode<T>* newNode = new TNode<T>(value);
     if (isEmpty()) {
         _head = _tail = newNode;
-    }
-    else {
+    } else {
         _tail->setNext(newNode);
         _tail = newNode;
     }
@@ -125,11 +124,9 @@ void TList<T>::insertAt(int pos, T value) {
     }
     if (pos == 0) {
         insertFront(value);
-    }
-    else if (pos == _size) {
+    } else if (pos == _size) {
         insertBack(value);
-    }
-    else {
+    } else {
         TNode<T>* current = _head;
         for (int i = 0; i < pos - 1; ++i) {
             current = current->getNext();
@@ -172,8 +169,7 @@ void TList<T>::removeBack() {
     if (_head == _tail) {
         delete _head;
         _head = _tail = nullptr;
-    }
-    else {
+    } else {
         TNode<T>* current = _head;
         while (current->getNext() != _tail) {
             current = current->getNext();
@@ -192,11 +188,9 @@ void TList<T>::removeAt(int pos) {
     }
     if (pos == 0) {
         removeFront();
-    }
-    else if (pos == _size - 1) {
+    } else if (pos == _size - 1) {
         removeBack();
-    }
-    else {
+    } else {
         TNode<T>* current = _head;
         for (int i = 0; i < pos - 1; ++i) {
             current = current->getNext();
@@ -212,8 +206,7 @@ void TList<T>::removeNode(TNode<T>* node) {
     }
     if (node == _head) {
         removeFront();
-    }
-    else {
+    } else {
         TNode<T>* current = _head;
         while (current && current->getNext() != node) {
             current = current->getNext();
