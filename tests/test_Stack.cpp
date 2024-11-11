@@ -6,7 +6,7 @@
 
 #define EPSILON 0.000001
 
-TEST(TestTStack, can_push_and_top) {
+TEST(TestTStack, can_top) {
     // Arrange
     TStack<int> stack(5);
 
@@ -16,6 +16,19 @@ TEST(TestTStack, can_push_and_top) {
 
     // Assert
     EXPECT_EQ(actual_result, 1);
+}
+
+TEST(TestTStack, can_push) {
+    // Arrange
+    TStack<int> stack(5);
+
+    // Act
+    stack.push(1);
+    stack.push(2);
+    int actual_result = stack.top();
+
+    // Assert
+    EXPECT_EQ(actual_result, 2);
 }
 
 TEST(TestTStack, can_pop) {

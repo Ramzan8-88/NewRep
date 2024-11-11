@@ -105,6 +105,7 @@ DMassive<T>::~DMassive() {
     delete[] _states;
 }
 
+
 template <typename T>
 void DMassive<T>::check_index(size_t pos) const {
     if (pos >= _size) {
