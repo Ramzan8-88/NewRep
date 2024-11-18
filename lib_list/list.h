@@ -11,7 +11,7 @@ class TNode {
     T _value;
     TNode<T>* _pnext;
 
- public:
+public:
     explicit TNode(T value) : _value(value), _pnext(nullptr) {}
     TNode(const TNode& other) = default;
     ~TNode() = default;
@@ -37,10 +37,9 @@ template <class T>
 class TList {
     TNode<T>* _head;
     TNode<T>* _tail;
-    int _size;
 
- public:
-    TList() : _head(nullptr), _tail(nullptr), _size(0) {}
+public:
+    TList() : _head(nullptr), _tail(nullptr) {}
     ~TList();
 
     void insertFront(T value);
@@ -80,6 +79,7 @@ TList<T>::~TList() {
     }
 }
 
+// вставка в начало списка
 template <class T>
 void TList<T>::insertFront(T value) {
     TNode<T>* newNode = new TNode<T>(value);
@@ -88,21 +88,22 @@ void TList<T>::insertFront(T value) {
     if (!_tail) {
         _tail = _head;
     }
-    ++_size;
 }
 
+// вставка в конец списка
 template <class T>
 void TList<T>::insertBack(T value) {
     TNode<T>* newNode = new TNode<T>(value);
     if (isEmpty()) {
         _head = _tail = newNode;
-    } else {
+    }
+    else {
         _tail->setNext(newNode);
         _tail = newNode;
     }
-    ++_size;
 }
 
+// вставка после указанного узла
 template <class T>
 void TList<T>::insertAfter(TNode<T>* node, T value) {
     if (!node) {
@@ -114,27 +115,31 @@ void TList<T>::insertAfter(TNode<T>* node, T value) {
     if (node == _tail) {
         _tail = newNode;
     }
-    ++_size;
 }
 
+// вставка на указанную позицию
 template <class T>
 void TList<T>::insertAt(int pos, T value) {
-    if (pos < 0 || pos > _size) {
-        throw std::out_of_range("Position out of range");
+    if (pos < 0) {
+        throw std::out_of_range("Position cannot be negative");
     }
     if (pos == 0) {
         insertFront(value);
-    } else if (pos == _size) {
-        insertBack(value);
-    } else {
-        TNode<T>* current = _head;
-        for (int i = 0; i < pos - 1; ++i) {
-            current = current->getNext();
-        }
-        insertAfter(current, value);
+        return;
     }
+
+    TNode<T>* current = _head;
+    for (int i = 0; i < pos - 1 && current; ++i) {
+        current = current->getNext();
+    }
+    if (!current) {
+        throw std::out_of_range("Position out of range");
+    }
+
+    insertAfter(current, value);
 }
 
+// поиск по значению
 template <class T>
 TNode<T>* TList<T>::find(T value) const {
     TNode<T>* current = _head;
@@ -147,6 +152,7 @@ TNode<T>* TList<T>::find(T value) const {
     return nullptr;
 }
 
+// удаление из начала списка
 template <class T>
 void TList<T>::removeFront() {
     if (isEmpty()) {
@@ -158,9 +164,9 @@ void TList<T>::removeFront() {
         _tail = nullptr;
     }
     delete oldHead;
-    --_size;
 }
 
+// удаление из конца списка
 template <class T>
 void TList<T>::removeBack() {
     if (isEmpty()) {
@@ -169,36 +175,42 @@ void TList<T>::removeBack() {
     if (_head == _tail) {
         delete _head;
         _head = _tail = nullptr;
-    } else {
-        TNode<T>* current = _head;
-        while (current->getNext() != _tail) {
-            current = current->getNext();
-        }
-        delete _tail;
-        _tail = current;
-        _tail->setNext(nullptr);
+        return;
     }
-    --_size;
+
+    TNode<T>* current = _head;
+    while (current->getNext() != _tail) {
+        current = current->getNext();
+    }
+
+    delete _tail;
+    _tail = current;
+    _tail->setNext(nullptr);
 }
 
+// удаление по позиции
 template <class T>
 void TList<T>::removeAt(int pos) {
-    if (pos < 0 || pos >= _size) {
-        throw std::out_of_range("Position out of range");
+    if (pos < 0 || isEmpty()) {
+        throw std::out_of_range("Invalid position or list is empty");
     }
     if (pos == 0) {
         removeFront();
-    } else if (pos == _size - 1) {
-        removeBack();
-    } else {
-        TNode<T>* current = _head;
-        for (int i = 0; i < pos - 1; ++i) {
-            current = current->getNext();
-        }
-        removeNode(current->getNext());
+        return;
     }
+
+    TNode<T>* current = _head;
+    for (int i = 0; i < pos - 1 && current; ++i) {
+        current = current->getNext();
+    }
+    if (!current || !current->getNext()) {
+        throw std::out_of_range("Position out of range");
+    }
+
+    removeNode(current->getNext());
 }
 
+// удаление указанного узла
 template <class T>
 void TList<T>::removeNode(TNode<T>* node) {
     if (isEmpty() || !node) {
@@ -206,23 +218,25 @@ void TList<T>::removeNode(TNode<T>* node) {
     }
     if (node == _head) {
         removeFront();
-    } else {
-        TNode<T>* current = _head;
-        while (current && current->getNext() != node) {
-            current = current->getNext();
-        }
-        if (!current) {
-            throw std::invalid_argument("Node not found");
-        }
-        current->setNext(node->getNext());
-        if (node == _tail) {
-            _tail = current;
-        }
-        delete node;
+        return;
     }
-    --_size;
+
+    TNode<T>* current = _head;
+    while (current && current->getNext() != node) {
+        current = current->getNext();
+    }
+    if (!current) {
+        throw std::invalid_argument("Node not found");
+    }
+
+    current->setNext(node->getNext());
+    if (node == _tail) {
+        _tail = current;
+    }
+    delete node;
 }
 
+// замена значения указанного узла
 template <class T>
 void TList<T>::replaceNode(TNode<T>* node, T value) {
     if (!node) {
@@ -231,18 +245,25 @@ void TList<T>::replaceNode(TNode<T>* node, T value) {
     node->setValue(value);
 }
 
+// замена значения по позиции
 template <class T>
 void TList<T>::replaceAt(int pos, T value) {
-    if (pos < 0 || pos >= _size) {
-        throw std::out_of_range("Position out of range");
+    if (pos < 0) {
+        throw std::out_of_range("Position cannot be negative");
     }
+
     TNode<T>* current = _head;
-    for (int i = 0; i < pos; ++i) {
+    for (int i = 0; i < pos && current; ++i) {
         current = current->getNext();
     }
+    if (!current) {
+        throw std::out_of_range("Position out of range");
+    }
+
     current->setValue(value);
 }
 
+// оператор присваивания
 template <class T>
 TList<T>& TList<T>::operator=(const TList<T>& other) {
     if (this == &other) {

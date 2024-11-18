@@ -1,5 +1,4 @@
 // Copyright 2024 Ramzan Kamaletdinov
-
 #ifndef LIB_DMASSIVE_DMASSIVE_H_
 #define LIB_DMASSIVE_DMASSIVE_H_
 
@@ -14,17 +13,17 @@ enum State { empty, busy, deleted };
 
 namespace algorithms {
 
-template<typename T>
-inline void swap(T& val_1, T& val_2) noexcept {
-    T tmp = val_1;
-    val_1 = val_2;
-    val_2 = tmp;
-}
+    template<typename T>
+    inline void swap(T& val_1, T& val_2) noexcept {
+        T tmp = val_1;
+        val_1 = val_2;
+        val_2 = tmp;
+    }
 
-template<typename T>
-inline T max(const T& val_1, const T& val_2) {
-    return (val_1 > val_2) ? val_1 : val_2;
-}
+    template<typename T>
+    inline T max(const T& val_1, const T& val_2) {
+        return (val_1 > val_2) ? val_1 : val_2;
+    }
 
 }  // namespace algorithms
 
@@ -36,7 +35,7 @@ class DMassive {
     size_t _size;
     size_t _deleted;
 
- public:
+public:
     DMassive();
     DMassive(const DMassive& archive);
     DMassive(const T* arr, size_t n);
@@ -82,10 +81,12 @@ class DMassive {
     size_t find_first(T value) const noexcept;
     size_t find_last(T value) const noexcept;
 
- private:
+    T& operator[](size_t index);
+    const T& operator[](size_t index) const;
+
+private:
     void check_index(size_t pos) const;
 };
-
 
 template <typename T>
 DMassive<T>::DMassive() {
@@ -104,7 +105,6 @@ DMassive<T>::~DMassive() {
     delete[] _data;
     delete[] _states;
 }
-
 
 template <typename T>
 void DMassive<T>::check_index(size_t pos) const {
@@ -366,6 +366,65 @@ void DMassive<T>::repack() {
     }
     _size = new_size;
     _deleted = 0;
+}
+
+template <typename T>
+DMassive<T>::DMassive(const T* arr, size_t size)
+    : _size(size),
+    _capacity(size),
+    _data(new T[size]),
+    _states(new State[size]),
+    _deleted(0) {
+    for (size_t i = 0; i < size; ++i) {
+        _data[i] = arr[i];
+        _states[i] = State::busy;
+    }
+}
+
+template <typename T>
+DMassive<T>::DMassive(size_t size, T value)
+    : _size(size),
+    _capacity(size),
+    _data(size > 0 ? new T[size] : nullptr),
+    _states(size > 0 ? new State[size] : nullptr),
+    _deleted(0) {
+    for (size_t i = 0; i < size; ++i) {
+        _data[i] = value;
+        _states[i] = State::busy;
+    }
+}
+
+template <typename T>
+T& DMassive<T>::operator[](size_t index) {
+    check_index(index);
+    return _data[index];
+}
+
+template <typename T>
+const T& DMassive<T>::operator[](size_t index) const {
+    check_index(index);
+    return _data[index];
+}
+
+template <typename T>
+DMassive<T>& DMassive<T>::assign(const DMassive& archive) {
+    if (this == &archive) return *this;
+
+    delete[] _data;
+    delete[] _states;
+
+    _size = archive._size;
+    _capacity = archive._capacity;
+    _deleted = archive._deleted;
+    _data = new T[_capacity];
+    _states = new State[_capacity];
+
+    for (size_t i = 0; i < _size; i++) {
+        _data[i] = archive._data[i];
+        _states[i] = archive._states[i];
+    }
+
+    return *this;
 }
 
 #endif  // LIB_DMASSIVE_DMASSIVE_H_

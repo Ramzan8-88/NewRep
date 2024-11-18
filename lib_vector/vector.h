@@ -3,117 +3,156 @@
 #ifndef LIB_VECTOR_VECTOR_H_
 #define LIB_VECTOR_VECTOR_H_
 
-#include <stdexcept>
-#include <iostream>
-#include <initializer_list>
 #include "../lib_DMassive/DMassive.h"
 
-template<typename T>
+template <typename T>
 class Vector {
- private:
     DMassive<T> _data;
     size_t _start_index;
 
-    void check_size_compatibility(const Vector& other) const {
-        if (_data.size() != other._data.size()) {
-            throw std::invalid_argument(
-                "Vector sizes must match for this operation");
-        }
-    }
+public:
+    // конструкторы
+    explicit Vector(size_t size = 0, T value = T{});
+    // вектор с заданным размером и значением по умолчанию
+    Vector(const T* arr, size_t size);  // вектор из массива
+    Vector(const Vector& other);  // копирующий конструктор
 
- public:
-    explicit Vector(size_t size = 0, T value = T{})
-        : _data(size, value), _start_index(0) {}
+    // оператор присваивания
+    Vector& operator=(const Vector& other);
 
-    Vector(const T* arr, size_t size)
-        : _data(arr, size), _start_index(0) {}
+    // доступ к элементам
+    T& operator[](size_t index);
+    const T& operator[](size_t index) const;
 
-    Vector(std::initializer_list<T> list)
-        : _data(list), _start_index(0) {}
+    // математические операторы
+    Vector& operator+=(const Vector& other);
+    Vector& operator-=(const Vector& other);
+    Vector& operator*=(const T& scalar);  // умножение на скаляр
+    Vector operator+(const Vector& other) const;
+    Vector operator-(const Vector& other) const;
+    Vector operator*(const T& scalar) const;
 
-    Vector(const Vector& other)
-        : _data(other._data), _start_index(other._start_index) {}
+    // операторы сравнения
+    bool operator==(const Vector& other) const;
+    bool operator!=(const Vector& other) const;
 
-    Vector& operator=(const Vector& other) {
-        if (this != &other) {
-            _data = other._data;
-            _start_index = other._start_index;
-        }
-        return *this;
-    }
+    // вспомогательные методы
+    size_t size() const noexcept;
+    void print() const noexcept;
 
-    T& operator[](size_t index) {
-        return _data[index + _start_index];
-    }
-
-    const T& operator[](size_t index) const {
-        return _data[index + _start_index];
-    }
-
-    Vector operator+(const Vector& other) const {
-        check_size_compatibility(other);
-        Vector result(_data.size());
-        for (size_t i = 0; i < _data.size(); ++i) {
-            result[i] = (*this)[i] + other[i];
-        }
-        return result;
-    }
-
-    Vector operator-(const Vector& other) const {
-        check_size_compatibility(other);
-        Vector result(_data.size());
-        for (size_t i = 0; i < _data.size(); ++i) {
-            result[i] = (*this)[i] - other[i];
-        }
-        return result;
-    }
-
-    Vector operator*(const T& scalar) const {
-        Vector result(_data.size());
-        for (size_t i = 0; i < _data.size(); ++i) {
-            result[i] = (*this)[i] * scalar;
-        }
-        return result;
-    }
-
-    Vector& operator+=(const Vector& other) {
-        check_size_compatibility(other);
-        for (size_t i = 0; i < _data.size(); ++i) {
-            (*this)[i] += other[i];
-        }
-        return *this;
-    }
-
-    Vector& operator-=(const Vector& other) {
-        check_size_compatibility(other);
-        for (size_t i = 0; i < _data.size(); ++i) {
-            (*this)[i] -= other[i];
-        }
-        return *this;
-    }
-
-    bool operator==(const Vector& other) const {
-        if (_data.size() != other._data.size()) return false;
-        for (size_t i = 0; i < _data.size(); ++i) {
-            if ((*this)[i] != other[i]) return false;
-        }
-        return true;
-    }
-
-    bool operator!=(const Vector& other) const {
-        return !(*this == other);
-    }
-
-    size_t size() const {
-        return _data.size();
-    }
-
-    void print() const {
-        for (size_t i = 0; i < _data.size(); ++i) {
-            std::cout << (*this)[i] << " ";
-        }
-        std::cout << std::endl;
-    }
+private:
+    void check_size_compatibility(const Vector& other) const;
+    // проверка совместимости размеров векторов
 };
+
+// реализация
+
+template <typename T>
+Vector<T>::Vector(size_t size, T value) : _data(size, value), _start_index(0) {}
+
+template <typename T>
+Vector<T>::Vector(const T* arr, size_t size)
+    : _data(arr, size),
+    _start_index(0) {}
+
+template <typename T>
+Vector<T>::Vector(const Vector& other)
+    : _data(other._data),
+    _start_index(other._start_index) {}
+
+template <typename T>
+Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
+    _data.assign(other._data);
+    return *this;
+}
+
+template <typename T>
+T& Vector<T>::operator[](size_t index) {
+    return _data[index];
+}
+
+template <typename T>
+const T& Vector<T>::operator[](size_t index) const {
+    return _data[index];
+}
+
+template <typename T>
+Vector<T>& Vector<T>::operator+=(const Vector& other) {
+    check_size_compatibility(other);
+    for (size_t i = 0; i < size(); ++i) {
+        _data[i] += other._data[i];
+    }
+    return *this;
+}
+
+template <typename T>
+Vector<T>& Vector<T>::operator-=(const Vector& other) {
+    check_size_compatibility(other);
+    for (size_t i = 0; i < size(); ++i) {
+        _data[i] -= other._data[i];
+    }
+    return *this;
+}
+
+template <typename T>
+Vector<T>& Vector<T>::operator*=(const T& scalar) {
+    for (size_t i = 0; i < size(); ++i) {
+        _data[i] *= scalar;
+    }
+    return *this;
+}
+
+template <typename T>
+Vector<T> Vector<T>::operator+(const Vector& other) const {
+    Vector result(*this);
+    result += other;
+    return result;
+}
+
+template <typename T>
+Vector<T> Vector<T>::operator-(const Vector& other) const {
+    Vector result(*this);
+    result -= other;
+    return result;
+}
+
+template <typename T>
+Vector<T> Vector<T>::operator*(const T& scalar) const {
+    Vector result(*this);
+    result *= scalar;
+    return result;
+}
+
+template <typename T>
+bool Vector<T>::operator==(const Vector& other) const {
+    if (size() != other.size()) return false;
+    for (size_t i = 0; i < size(); ++i) {
+        if (_data[i] != other._data[i]) return false;
+    }
+    return true;
+}
+
+template <typename T>
+bool Vector<T>::operator!=(const Vector& other) const {
+    return !(*this == other);
+}
+
+template <typename T>
+size_t Vector<T>::size() const noexcept {
+    return _data.size();
+}
+
+template <typename T>
+void Vector<T>::print() const noexcept {
+    _data.print();
+}
+
+template <typename T>
+void Vector<T>::check_size_compatibility(const Vector& other) const {
+    if (size() != other.size()) {
+        throw std::invalid_argument(
+            "Vector sizes must match for this operation");
+    }
+}
 
 #endif  // LIB_VECTOR_VECTOR_H_
