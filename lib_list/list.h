@@ -21,7 +21,9 @@ public:
         return _value == other._value;
     }
 
-    T getValue() const { return _value; }
+    T& getValue() { return _value; }
+    const T& getValue() const { return _value; }
+
     void setValue(T value) { _value = value; }
 
     TNode<T>* getNext() const { return _pnext; }
@@ -59,6 +61,8 @@ public:
 
     bool isEmpty() const { return _head == nullptr; }
 
+    TNode<T>* getHead() const { return _head; }
+
     TList<T>& operator=(const TList<T>& other);
 
     friend std::ostream& operator<<(std::ostream& os, const TList<T>& list) {
@@ -70,6 +74,59 @@ public:
         os << "null";
         return os;
     }
+
+    // вложенный класс для итератора
+    class Iterator {
+        TNode<T>* _current;
+
+    public:
+        explicit Iterator(TNode<T>* start) : _current(start) {}
+
+        bool hasNext() const { return _current != nullptr; }
+
+        T& next() {
+            if (!hasNext()) {
+                throw std::out_of_range("No more elements");
+            }
+            T& value = _current->getValue();
+            _current = _current->getNext();
+            return value;
+        }
+
+        T& getValue() const {
+            if (!_current) {
+                throw std::out_of_range("Iterator is out of range");
+            }
+            return _current->getValue();
+        }
+
+        void setValue(T value) {
+            if (!_current) {
+                throw std::out_of_range("Iterator is out of range");
+            }
+            _current->setValue(value);
+        }
+
+        Iterator& operator++() {
+            if (!hasNext()) {
+                throw std::out_of_range("No more elements");
+            }
+            _current = _current->getNext();
+            return *this;
+        }
+
+        bool operator!=(const Iterator& other) const {
+            return _current != other._current;
+        }
+
+        T& operator*() const { return getValue(); }
+    };
+
+    Iterator begin() { return Iterator(_head); }
+    Iterator end() { return Iterator(nullptr); }
+
+    Iterator begin() const { return Iterator(_head); }
+    Iterator end() const { return Iterator(nullptr); }
 };
 
 template <class T>

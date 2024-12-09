@@ -1,174 +1,268 @@
 // Copyright 2024 Ramzan Kamaletdinov
 
 #include <gtest.h>
-#include "../lib_list/list.h"
+#include "../lib_List/List.h"
 
-TEST(TNodeTest, DefaultConstructor) {
-    TNode<int> node(5);
-    EXPECT_EQ(node.getValue(), 5);
-    EXPECT_EQ(node.getNext(), nullptr);
+TEST(TListTest, can_create_empty_list) {
+    // Act & Assert
+    TList<int> list;
+    ASSERT_TRUE(list.isEmpty());
 }
 
-TEST(TNodeTest, SetValue) {
-    TNode<int> node(5);
-    node.setValue(10);
-    EXPECT_EQ(node.getValue(), 10);
+TEST(TListTest, can_insert_front) {
+    // Arrange
+    TList<int> list;
+
+    // Act
+    list.insertFront(10);
+
+    // Assert
+    EXPECT_FALSE(list.isEmpty());
+    EXPECT_EQ(list.find(10)->getValue(), 10);
 }
 
-TEST(TNodeTest, SetNext) {
-    TNode<int> node1(5);
+TEST(TListTest, can_insert_back) {
+    // Arrange
+    TList<int> list;
+
+    // Act
+    list.insertBack(20);
+
+    // Assert
+    EXPECT_FALSE(list.isEmpty());
+    EXPECT_EQ(list.find(20)->getValue(), 20);
+}
+
+TEST(TListTest, can_insert_after_node) {
+    // Arrange
+    TList<int> list;
+    list.insertFront(10);
+    TNode<int>* node = list.find(10);
+
+    // Act
+    list.insertAfter(node, 15);
+
+    // Assert
+    EXPECT_EQ(list.find(15)->getValue(), 15);
+}
+
+TEST(TListTest, can_insert_at_position) {
+    // Arrange
+    TList<int> list;
+    list.insertBack(10);
+    list.insertBack(20);
+
+    // Act
+    list.insertAt(1, 15);
+
+    // Assert
+    EXPECT_EQ(list.find(15)->getValue(), 15);
+}
+
+TEST(TListTest, throws_when_insert_at_invalid_position) {
+    // Arrange
+    TList<int> list;
+
+    // Act & Assert
+    ASSERT_THROW(list.insertAt(-1, 10), std::out_of_range);
+}
+
+TEST(TListTest, can_remove_front) {
+    // Arrange
+    TList<int> list;
+    list.insertFront(10);
+
+    // Act
+    list.removeFront();
+
+    // Assert
+    EXPECT_TRUE(list.isEmpty());
+}
+
+TEST(TListTest, can_remove_back) {
+    // Arrange
+    TList<int> list;
+    list.insertBack(20);
+
+    // Act
+    list.removeBack();
+
+    // Assert
+    EXPECT_TRUE(list.isEmpty());
+}
+
+TEST(TListTest, can_remove_at_position) {
+    // Arrange
+    TList<int> list;
+    list.insertBack(10);
+    list.insertBack(20);
+    list.insertBack(30);
+
+    // Act
+    list.removeAt(1);
+
+    // Assert
+    EXPECT_EQ(list.find(20), nullptr);
+}
+
+TEST(TListTest, throws_when_remove_at_invalid_position) {
+    // Arrange
+    TList<int> list;
+    list.insertBack(10);
+
+    // Act & Assert
+    ASSERT_THROW(list.removeAt(-1), std::out_of_range);
+}
+
+TEST(TListTest, can_find_value) {
+    // Arrange
+    TList<int> list;
+    list.insertBack(50);
+
+    // Act
+    TNode<int>* found = list.find(50);
+
+    // Assert
+    EXPECT_NE(found, nullptr);
+    EXPECT_EQ(found->getValue(), 50);
+}
+
+TEST(TListTest, returns_null_if_value_not_found) {
+    // Arrange
+    TList<int> list;
+
+    // Act
+    TNode<int>* found = list.find(100);
+
+    // Assert
+    EXPECT_EQ(found, nullptr);
+}
+
+TEST(TListTest, can_replace_node_value) {
+    // Arrange
+    TList<int> list;
+    list.insertBack(10);
+    TNode<int>* node = list.find(10);
+
+    // Act
+    list.replaceNode(node, 20);
+
+    // Assert
+    EXPECT_EQ(list.find(20)->getValue(), 20);
+}
+
+TEST(TListTest, can_replace_value_at_position) {
+    // Arrange
+    TList<int> list;
+    list.insertBack(10);
+
+    // Act
+    list.replaceAt(0, 20);
+
+    // Assert
+    EXPECT_EQ(list.find(20)->getValue(), 20);
+}
+
+TEST(TListTest, throws_when_replace_at_invalid_position) {
+    // Arrange
+    TList<int> list;
+
+    // Act & Assert
+    ASSERT_THROW(list.replaceAt(-1, 10), std::out_of_range);
+}
+
+TEST(TListTest, can_assign_list) {
+    // Arrange
+    TList<int> list1;
+    list1.insertBack(10);
+    list1.insertBack(20);
+
+    TList<int> list2;
+
+    // Act
+    list2 = list1;
+
+    // Assert
+    EXPECT_EQ(list2.find(10)->getValue(), 10);
+    EXPECT_EQ(list2.find(20)->getValue(), 20);
+}
+
+TEST(TNodeTest, can_copy_node) {
+    // Arrange
+    TNode<int> node(10);
+
+    // Act
+    TNode<int> copyNode = node;
+
+    // Assert
+    EXPECT_EQ(copyNode.getValue(), node.getValue());
+}
+
+TEST(TNodeTest, can_compare_nodes) {
+    // Arrange
+    TNode<int> node1(10);
     TNode<int> node2(10);
-    node1.setNext(&node2);
-    EXPECT_EQ(node1.getNext(), &node2);
-}
+    TNode<int> node3(20);
 
-TEST(TNodeTest, EqualityOperator) {
-    TNode<int> node1(5);
-    TNode<int> node2(5);
-    TNode<int> node3(10);
+    // Assert
     EXPECT_TRUE(node1 == node2);
     EXPECT_FALSE(node1 == node3);
 }
 
-TEST(TNodeTest, OutputStreamOperator) {
-    TNode<int> node(5);
-    std::stringstream ss;
-    ss << node;
-    EXPECT_EQ(ss.str(), "5");
-}
-
-TEST(TListTest, DefaultConstructor) {
+TEST(TListTest, throws_when_insert_after_null) {
+    // Arrange
     TList<int> list;
-    EXPECT_TRUE(list.isEmpty());
+
+    // Act & Assert
+    ASSERT_THROW(list.insertAfter(nullptr, 10), std::invalid_argument);
 }
 
-TEST(TListTest, InsertFront) {
-    TList<int> list;
-    list.insertFront(5);
-    EXPECT_FALSE(list.isEmpty());
-    EXPECT_EQ(list.find(5)->getValue(), 5);
-}
-
-TEST(TListTest, InsertBack) {
+TEST(TListTest, throws_when_remove_non_existent_node) {
+    // Arrange
     TList<int> list;
     list.insertBack(10);
-    EXPECT_FALSE(list.isEmpty());
-    EXPECT_EQ(list.find(10)->getValue(), 10);
+    TNode<int>* node = new TNode<int>(20);
+
+    // Act & Assert
+    ASSERT_THROW(list.removeNode(node), std::invalid_argument);
+    delete node;
 }
 
-TEST(TListTest, InsertAfter) {
+TEST(TListTest, can_remove_node_by_pointer) {
+    // Arrange
     TList<int> list;
-    list.insertFront(5);
-    TNode<int>* node = list.find(5);
-    list.insertAfter(node, 10);
-    EXPECT_EQ(list.find(10)->getValue(), 10);
-}
-
-TEST(TListTest, InsertAt) {
-    TList<int> list;
-    list.insertBack(1);
-    list.insertBack(3);
-    list.insertAt(1, 2);
-    EXPECT_EQ(list.find(2)->getValue(), 2);
-}
-
-TEST(TListTest, RemoveFront) {
-    TList<int> list;
-    list.insertFront(5);
-    list.removeFront();
-    EXPECT_TRUE(list.isEmpty());
-}
-
-TEST(TListTest, RemoveBack) {
-    TList<int> list;
-    list.insertFront(5);
     list.insertBack(10);
-    list.removeBack();
-    EXPECT_EQ(list.find(5)->getValue(), 5);
-    EXPECT_EQ(list.find(10), nullptr);
-}
+    TNode<int>* node = list.find(10);
 
-TEST(TListTest, RemoveAt) {
-    TList<int> list;
-    list.insertBack(1);
-    list.insertBack(2);
-    list.insertBack(3);
-    list.removeAt(1);
-    EXPECT_EQ(list.find(2), nullptr);
-}
-
-TEST(TListTest, RemoveNode) {
-    TList<int> list;
-    list.insertBack(1);
-    TNode<int>* node = list.find(1);
+    // Act
     list.removeNode(node);
+
+    // Assert
     EXPECT_TRUE(list.isEmpty());
 }
 
-TEST(TListTest, ReplaceNode) {
-    TList<int> list;
-    list.insertBack(1);
-    TNode<int>* node = list.find(1);
-    list.replaceNode(node, 2);
-    EXPECT_EQ(list.find(2)->getValue(), 2);
-}
-
-TEST(TListTest, ReplaceAt) {
-    TList<int> list;
-    list.insertBack(1);
-    list.insertBack(2);
-    list.replaceAt(1, 3);
-    EXPECT_EQ(list.find(3)->getValue(), 3);
-}
-
-TEST(TListTest, AssignmentOperator) {
-    TList<int> list1;
-    list1.insertBack(1);
-    list1.insertBack(2);
-    TList<int> list2;
-    list2 = list1;
-    EXPECT_EQ(list2.find(1)->getValue(), 1);
-    EXPECT_EQ(list2.find(2)->getValue(), 2);
-}
-
-TEST(TListTest, OutputStreamOperator) {
-    TList<int> list;
-    list.insertBack(1);
-    list.insertBack(2);
+TEST(TNodeTest, can_print_node) {
+    // Arrange
+    TNode<int> node(10);
     std::stringstream ss;
+
+    // Act
+    ss << node;
+
+    // Assert
+    EXPECT_EQ(ss.str(), "10");
+}
+
+TEST(TListTest, can_print_list) {
+    // Arrange
+    TList<int> list;
+    list.insertBack(10);
+    list.insertBack(20);
+    std::stringstream ss;
+
+    // Act
     ss << list;
-    EXPECT_EQ(ss.str(), "1 -> 2 -> null");
-}
 
-TEST(TListTest, InsertAfterNullptrThrows) {
-    TList<int> list;
-    EXPECT_THROW(list.insertAfter(nullptr, 5), std::invalid_argument);
-}
-
-TEST(TListTest, InsertAtInvalidPositionThrows) {
-    TList<int> list;
-    EXPECT_THROW(list.insertAt(-1, 5), std::out_of_range);
-    EXPECT_THROW(list.insertAt(1, 5), std::out_of_range);
-}
-
-TEST(TListTest, RemoveAtInvalidPositionThrows) {
-    TList<int> list;
-    EXPECT_THROW(list.removeAt(-1), std::out_of_range);
-    EXPECT_THROW(list.removeAt(0), std::out_of_range);
-}
-
-TEST(TListTest, RemoveNodeNullptrThrows) {
-    TList<int> list;
-    EXPECT_THROW(list.removeNode(nullptr), std::invalid_argument);
-}
-
-TEST(TListTest, ReplaceNodeNullptrThrows) {
-    TList<int> list;
-    EXPECT_THROW(list.replaceNode(nullptr, 5), std::invalid_argument);
-}
-
-TEST(TListTest, ReplaceAtInvalidPositionThrows) {
-    TList<int> list;
-    EXPECT_THROW(list.replaceAt(-1, 5), std::out_of_range);
-    EXPECT_THROW(list.replaceAt(0, 5), std::out_of_range);
+    // Assert
+    EXPECT_EQ(ss.str(), "10 -> 20 -> null");
 }

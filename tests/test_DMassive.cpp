@@ -242,7 +242,7 @@ TEST(TestDMassive, can_reserve_memory) {
 
     // Assert
     EXPECT_EQ(arr.capacity(), 15);  // Should increase capacity
-                                    // based on STEP_CAPACITY
+    // based on STEP_CAPACITY
 }
 
 TEST(TestDMassive, can_repack) {
@@ -282,7 +282,7 @@ TEST(TestDMassive, can_insert_multiple_elements) {
     arr.push_back(30);
 
     // Act
-    int to_insert[] = {20, 21, 22};
+    int to_insert[] = { 20, 21, 22 };
     arr.insert(to_insert, 3, 1);
 
     // Assert

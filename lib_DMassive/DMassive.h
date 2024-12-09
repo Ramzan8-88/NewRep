@@ -1,4 +1,5 @@
 // Copyright 2024 Ramzan Kamaletdinov
+
 #ifndef LIB_DMASSIVE_DMASSIVE_H_
 #define LIB_DMASSIVE_DMASSIVE_H_
 

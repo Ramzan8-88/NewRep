@@ -1,0 +1,2 @@
+create_project_lib(StackOnList)
+add_depend(StackOnList List lib_list)
