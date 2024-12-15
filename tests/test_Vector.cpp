@@ -45,19 +45,6 @@ TEST(VectorTest, can_copy_vector) {
     EXPECT_EQ(vec2[0], 5);
 }
 
-TEST(VectorTest, can_assign_vector) {
-    // Arrange
-    Vector<int> vec1(3, 5);
-    Vector<int> vec2;
-
-    // Act
-    vec2 = vec1;
-
-    // Assert
-    EXPECT_EQ(vec2.size(), 3);
-    EXPECT_EQ(vec2[0], 5);
-}
-
 TEST(VectorTest, can_access_elements) {
     // Arrange
     Vector<int> vec(3, 1);

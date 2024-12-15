@@ -218,14 +218,11 @@ void DMassive<T>::push_front(T value) {
 
 template <typename T>
 void DMassive<T>::pop_front() {
-    if (_size == 0) throw std::out_of_range("Array is empty");
-    for (size_t i = 0; i < _size - 1; i++) {
-        _data[i] = _data[i + 1];
-        _states[i] = _states[i + 1];
-    }
+    if (_size == 0) throw std::out_of_range("Deleted");
+    _states[0] = State::deleted;
     _size--;
-    _states[_size] = State::empty;
 }
+
 
 template <typename T>
 DMassive<T>& DMassive<T>::insert(const T* arr, size_t n, size_t pos) {
