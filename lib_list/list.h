@@ -35,6 +35,41 @@ public:
     }
 };
 
+template<typename T>
+class List {
+public:
+    struct Node {
+        T data;
+        Node* next;
+        Node(T val) : data(val), next(nullptr) {}
+    };
+
+    List() : head(nullptr), tail(nullptr) {}
+
+    void append(T data) {
+        Node* newNode = new Node(data);
+        if (tail) {
+            tail->next = newNode;
+            tail = newNode;
+        }
+        else {
+            head = tail = newNode;
+        }
+    }
+
+    void print() const {
+        Node* current = head;
+        while (current) {
+            std::cout << current->data << " ";
+            current = current->next;
+        }
+        std::cout << std::endl;
+    }
+
+    Node* head;
+    Node* tail;
+};
+
 template <class T>
 class TList {
     TNode<T>* _head;
