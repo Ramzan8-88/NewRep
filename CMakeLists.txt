@@ -11,6 +11,19 @@ include(cmake/function.cmake)         # подхватываем функции,
 								      # и для создания исполняемого проекта в отдельные функции
 
 add_subdirectory(lib_easy_example)    # подключаем дополнительный CMakeLists.txt из подкаталога с именем lib_easy_example
+add_subdirectory(lib_pair)
+add_subdirectory(lib_list)
+add_subdirectory(lib_MergingLists)
+add_subdirectory(lib_StackOnList)
+add_subdirectory(lib_calculator)
+add_subdirectory(lib_vector)
+add_subdirectory(lib_Queue)
+add_subdirectory(lib_SortedTable)
+add_subdirectory(lib_TUnsortedTable)
+add_subdirectory(lib_ITable)  
+add_subdirectory(lib_Derevo)            
+add_subdirectory(lib_DMassive)        
+add_subdirectory(lib_Stack)           
 add_subdirectory(main)                # подключаем дополнительный CMakeLists.txt из подкаталога с именем main
 
 option(BTEST "build test?" ON)        # указываем подключаем ли google-тесты (ON или YES) или нет (OFF или NO)
